@@ -9,7 +9,7 @@ create table public.lux_work(id uuid primary key default gen_random_uuid(),clien
 -- All client data and photo access goes through the authenticated server.
 do $$ declare t text; begin foreach t in array array['lux_owners','lux_services','lux_clients','lux_bookings','lux_payments','lux_work'] loop execute format('alter table public.%I enable row level security',t);execute format('revoke all on public.%I from anon, authenticated',t);end loop;end $$;
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('lux-work','lux-work',false,5242880,array['image/jpeg','image/png','image/webp']);
-create function public.lux_create_booking(p_id uuid,p_name text,p_phone text,p_email text,p_service uuid,p_at timestamptz,p_notes text) returns public.lux_bookings language plpgsql security definer set search_path=public,pg_temp as $$
+create function public.lux_create_booking(p_id uuid,p_name text,p_phone text,p_email text,p_service uuid,p_at timestamptz,p_notes text) returns public.lux_bookings language plpgsql security invoker set search_path=public,pg_temp as $$
 declare svc public.lux_services; client uuid; booking public.lux_bookings; local_at timestamp;
 begin
  if length(trim(p_name)) not between 1 and 80 or length(p_notes)>1000 or p_at<=now() or p_at>now()+interval '180 days' then raise exception 'Invalid booking';end if;
@@ -30,7 +30,7 @@ begin
  values(p_id,client,svc.id,p_name,p_phone,p_email,svc.name,p_at,p_notes,500000,svc.price*100,'lux-'||p_id::text) returning * into booking;
  return booking;
 end $$;
-create function public.lux_apply_payment(p_reference text,p_amount integer,p_currency text) returns text language plpgsql security definer set search_path=public,pg_temp as $$
+create function public.lux_apply_payment(p_reference text,p_amount integer,p_currency text) returns text language plpgsql security invoker set search_path=public,pg_temp as $$
 declare booking public.lux_bookings; occupied integer;
 begin
  select * into booking from public.lux_bookings where payment_reference=p_reference for update;
@@ -51,3 +51,5 @@ grant execute on function public.lux_apply_payment(text,integer,text) to service
 -- insert into public.lux_owners(user_id) values ('OWNER_AUTH_UUID');
 -- Add services only after the studio confirms its deposit rule. price is naira.
 -- insert into public.lux_services(name,category,price,deposit_percent) values ('Gel polish — Short','nails',10000,50);
+
+grant all on public.lux_owners,public.lux_services,public.lux_clients,public.lux_bookings,public.lux_payments,public.lux_work to service_role;
