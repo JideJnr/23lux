@@ -40,3 +40,7 @@ The studio accepts overlapping appointments. No exclusive slots, opening-hours l
 ## Required end-to-end QA
 
 Use Paystack test mode and consenting test client data. Verify owner and non-owner access; anonymous API denial; actual database persistence; amount mismatch rejection; webhook replay; expired sessions; client-to-photo linkage; hidden/private photo access; consent removal; and cancellation after payment. Current local tests cover pure payment/signature validation only; database and provider integration are not yet verified.
+
+## Confirmed studio rules
+
+NGN 5,000 booking deposit (500000 kobo), balance after service. Monday-Saturday, arrival from 10:00 up to but excluding 21:00, Africa/Lagos. Maximum five confirmed/completed or active unpaid holds per day. Unpaid holds expire after 20 minutes. Creation and payment confirmation share a per-day PostgreSQL advisory lock. Late payments on a full day enter payment_review and require owner follow-up/refund handling. Arrival times may overlap; service durations remain unspecified. The percent field is legacy and does not determine the fixed booking deposit. Do not list standalone services under NGN 5,000 in checkout until the studio decides how the deposit applies.

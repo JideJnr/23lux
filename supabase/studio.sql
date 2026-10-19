@@ -10,28 +10,36 @@ create table public.lux_work(id uuid primary key default gen_random_uuid(),clien
 do $$ declare t text; begin foreach t in array array['lux_owners','lux_services','lux_clients','lux_bookings','lux_payments','lux_work'] loop execute format('alter table public.%I enable row level security',t);execute format('revoke all on public.%I from anon, authenticated',t);end loop;end $$;
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('lux-work','lux-work',false,5242880,array['image/jpeg','image/png','image/webp']);
 create function public.lux_create_booking(p_id uuid,p_name text,p_phone text,p_email text,p_service uuid,p_at timestamptz,p_notes text) returns public.lux_bookings language plpgsql security definer set search_path=public,pg_temp as $$
-declare svc public.lux_services; client uuid; booking public.lux_bookings;
+declare svc public.lux_services; client uuid; booking public.lux_bookings; local_at timestamp;
 begin
  if length(trim(p_name)) not between 1 and 80 or length(p_notes)>1000 or p_at<=now() or p_at>now()+interval '180 days' then raise exception 'Invalid booking';end if;
  perform pg_advisory_xact_lock(hashtext(p_id::text));
  select * into booking from public.lux_bookings where id=p_id;
- if found then return booking;end if;
+ if found then
+ if booking.status<>'awaiting_payment' or booking.created_at<now()-interval '20 minutes' then raise exception 'Reservation expired or already processed';end if;
+ return booking;end if;
+ local_at:=p_at at time zone 'Africa/Lagos';
+ if extract(isodow from local_at)=7 or local_at::time<time '10:00' or local_at::time>=time '21:00' then raise exception 'Book Monday to Saturday, 10am to 9pm Lagos time';end if;
+ perform pg_advisory_xact_lock(hashtext('lux-day-'||local_at::date::text));
+ if (select count(*) from public.lux_bookings where (preferred_at at time zone 'Africa/Lagos')::date=local_at::date and (status in ('confirmed','completed') or (status='awaiting_payment' and created_at>now()-interval '20 minutes')))>=5 then raise exception 'This day is fully booked';end if;
  select * into svc from public.lux_services where id=p_service and active;
  if not found then raise exception 'Service unavailable';end if;
  insert into public.lux_clients(name,phone,email) values(p_name,p_phone,p_email) on conflict(phone) do nothing;
  select id into client from public.lux_clients where phone=p_phone;
  insert into public.lux_bookings(id,client_id,service_id,customer_name,phone,email,service_name,preferred_at,notes,amount_due,total_price,payment_reference)
- values(p_id,client,svc.id,p_name,p_phone,p_email,svc.name,p_at,p_notes,ceil(svc.price*100.0*svc.deposit_percent/100)::integer,svc.price*100,'lux-'||p_id::text) returning * into booking;
+ values(p_id,client,svc.id,p_name,p_phone,p_email,svc.name,p_at,p_notes,500000,svc.price*100,'lux-'||p_id::text) returning * into booking;
  return booking;
 end $$;
 create function public.lux_apply_payment(p_reference text,p_amount integer,p_currency text) returns text language plpgsql security definer set search_path=public,pg_temp as $$
-declare booking public.lux_bookings;
+declare booking public.lux_bookings; occupied integer;
 begin
  select * into booking from public.lux_bookings where payment_reference=p_reference for update;
  if not found or booking.amount_due<>p_amount or p_currency<>'NGN' then raise exception 'Payment mismatch';end if;
  insert into public.lux_payments(reference,booking_id,amount,currency) values(p_reference,booking.id,p_amount,p_currency) on conflict(reference) do nothing;
  if booking.paid_at is null then
- update public.lux_bookings set paid_at=now(),status=case when status='awaiting_payment' then 'confirmed' else 'payment_review' end where id=booking.id;
+ perform pg_advisory_xact_lock(hashtext('lux-day-'||(booking.preferred_at at time zone 'Africa/Lagos')::date::text));
+ select count(*) into occupied from public.lux_bookings where id<>booking.id and (preferred_at at time zone 'Africa/Lagos')::date=(booking.preferred_at at time zone 'Africa/Lagos')::date and (status in ('confirmed','completed') or (status='awaiting_payment' and created_at>now()-interval '20 minutes'));
+ update public.lux_bookings set paid_at=now(),status=case when status='awaiting_payment' and occupied<5 and preferred_at>now() then 'confirmed' else 'payment_review' end where id=booking.id;
  end if;
  return (select status from public.lux_bookings where id=booking.id);
 end $$;
