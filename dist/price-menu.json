@@ -1,0 +1,310 @@
+{
+  "nails": {
+    "title": "Nails, your way.",
+    "intro": "Start with your set. Add the details that make it yours.",
+    "groups": [
+      [
+        "Gel polish",
+        "Choose your length.",
+        [
+          [
+            "Short",
+            10000
+          ],
+          [
+            "Medium",
+            13000
+          ],
+          [
+            "Long",
+            16000
+          ],
+          [
+            "Extra long",
+            18000
+          ]
+        ]
+      ],
+      [
+        "Acrylic nails",
+        "A fresh set, a whole new mood.",
+        [
+          [
+            "Short",
+            18000
+          ],
+          [
+            "Medium",
+            21000
+          ],
+          [
+            "Long",
+            24000
+          ],
+          [
+            "Extra long",
+            28000
+          ]
+        ]
+      ],
+      [
+        "Nail art & extras",
+        "Add to your base service. Per-finger prices are marked.",
+        [
+          [
+            "French tip",
+            5000
+          ],
+          [
+            "Marble effect",
+            4000
+          ],
+          [
+            "Encapsulation",
+            5000
+          ],
+          [
+            "Ombré effect",
+            5000
+          ],
+          [
+            "Custom artwork",
+            "₦5,000–₦8,000"
+          ],
+          [
+            "Charms",
+            "₦2,000–₦5,000"
+          ],
+          [
+            "Cat eye effect",
+            5000
+          ],
+          [
+            "Chrome · per finger",
+            1000
+          ],
+          [
+            "Airbrush design · per finger",
+            1000
+          ],
+          [
+            "Red bottom",
+            4000
+          ],
+          [
+            "Soak off",
+            5000
+          ]
+        ]
+      ],
+      [
+        "Toes",
+        "A little attention, head to toe.",
+        [
+          [
+            "Painting",
+            4000
+          ],
+          [
+            "Big toe fixing",
+            5000
+          ],
+          [
+            "Fixing all toes",
+            7000
+          ],
+          [
+            "Acrylic toes",
+            11000
+          ]
+        ]
+      ],
+      [
+        "Manicure & pedicure",
+        "The finishing ritual.",
+        [
+          [
+            "Manicure",
+            7000
+          ],
+          [
+            "Pedicure",
+            12000
+          ]
+        ]
+      ]
+    ]
+  },
+  "piercings": {
+    "title": "Find your next detail.",
+    "intro": "Explore placements and prices. Ask the studio about jewellery and suitability.",
+    "groups": [
+      [
+        "Ear piercings",
+        "From a first pair to your next ear detail.",
+        [
+          [
+            "Lobe · pair",
+            10000
+          ],
+          [
+            "Upper lobe",
+            8000
+          ],
+          [
+            "Helix",
+            8000
+          ],
+          [
+            "Forward helix",
+            9000
+          ],
+          [
+            "Double helix",
+            15000
+          ],
+          [
+            "Triple helix",
+            22000
+          ],
+          [
+            "Flat",
+            9000
+          ],
+          [
+            "Conch",
+            9000
+          ],
+          [
+            "Tragus",
+            9000
+          ],
+          [
+            "Anti-tragus",
+            8000
+          ],
+          [
+            "Rook",
+            10000
+          ],
+          [
+            "Daith",
+            10000
+          ],
+          [
+            "Snug",
+            10000
+          ],
+          [
+            "Industrial · scaffold",
+            20000
+          ]
+        ]
+      ],
+      [
+        "Facial piercings",
+        "A detail that feels like you.",
+        [
+          [
+            "Nostril",
+            9000
+          ],
+          [
+            "Septum",
+            10000
+          ],
+          [
+            "Eyebrow",
+            15000
+          ],
+          [
+            "Labret",
+            12000
+          ],
+          [
+            "Medusa",
+            12000
+          ],
+          [
+            "Monroe",
+            12000
+          ],
+          [
+            "Madonna",
+            12000
+          ],
+          [
+            "Surface tragus",
+            16000
+          ]
+        ]
+      ],
+      [
+        "Oral piercings",
+        "Discuss placement and suitability with the studio.",
+        [
+          [
+            "Tongue",
+            20000
+          ],
+          [
+            "Smiley",
+            12000
+          ]
+        ]
+      ],
+      [
+        "Body piercings",
+        "Your placement, your expression.",
+        [
+          [
+            "Navel · belly",
+            15000
+          ],
+          [
+            "Floating navel",
+            18000
+          ],
+          [
+            "Single nipple",
+            15000
+          ],
+          [
+            "Pair of nipples",
+            28000
+          ]
+        ]
+      ],
+      [
+        "Aftercare products",
+        "Ask about aftercare when booking.",
+        [
+          [
+            "Saline spray",
+            3000
+          ],
+          [
+            "Bump disc",
+            2000
+          ]
+        ]
+      ]
+    ]
+  },
+  "tattoos": {
+    "title": "A little ink. A personal story.",
+    "intro": "Semi-permanent tattoos, with your design at the centre.",
+    "groups": [
+      [
+        "Your tattoo consultation",
+        "Tell us your design idea, size and placement. The studio will provide a quote.",
+        [
+          [
+            "Semi-permanent tattoo",
+            "Price on consultation"
+          ]
+        ]
+      ]
+    ]
+  }
+}
