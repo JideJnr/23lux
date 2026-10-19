@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+node_modules/
+*.tar.gz
+.sites-runtime/
+.sites-checkout/
+__pycache__/
