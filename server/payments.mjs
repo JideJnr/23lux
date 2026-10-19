@@ -1,0 +1,5 @@
+import {createHmac,timingSafeEqual} from 'node:crypto';
+export function validSignature(raw,signature,secret){if(!secret||! /^[a-f0-9]{128}$/i.test(signature||''))return false;return timingSafeEqual(createHmac('sha512',secret).update(raw).digest(),Buffer.from(signature,'hex'));}
+export function validatePayment(transaction,booking,mode){return transaction?.status==='success'&&transaction.reference===booking.payment_reference&&transaction.currency==='NGN'&&Number.isSafeInteger(transaction.amount)&&transaction.amount===booking.amount_due&&transaction.domain===mode;}
+export function phoneNumber(value){let digits=String(value||'').replace(/[^0-9]/g,'');if(/^0\d{10}$/.test(digits))digits='234'+digits.slice(1);if(!/^\d{10,15}$/.test(digits))throw new Error('Enter a valid phone number.');return digits;}
+export function imageType(buffer){if(buffer.length>=3&&buffer[0]===255&&buffer[1]===216&&buffer[2]===255)return'image/jpeg';if(buffer.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))return'image/png';if(buffer.toString('ascii',0,4)==='RIFF'&&buffer.toString('ascii',8,12)==='WEBP')return'image/webp';throw new Error('Use a JPEG, PNG or WebP photo.');}

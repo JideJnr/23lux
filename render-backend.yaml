@@ -1,0 +1,24 @@
+# Separate blueprint: do not replace the working static site until backend QA passes.
+services:
+  - type: web
+    name: lux23-studio-backend
+    runtime: node
+    plan: free
+    buildCommand: echo "No dependencies to install"
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ORIGIN
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: PAYSTACK_SECRET_KEY
+        sync: false
+      - key: PAYSTACK_MODE
+        value: test
+      - key: BOOKING_ENABLED
+        value: "false"
